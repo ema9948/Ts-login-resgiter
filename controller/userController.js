@@ -15,15 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = exports.login = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
     const user = yield userModel_1.default.findOne({ email });
     if (!user)
         return res.status(404).json({ msg: "email no registrado" });
+    if (user.password != password)
+        return res.sendStatus(401);
     return res.sendStatus(200);
 });
 exports.login = login;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
+    console.log(name, email, password);
     if (!email || !name || !password)
         return res.status(404).json({ msg: "faltan datos." });
     let newUser = yield userModel_1.default.findOne({ email });
